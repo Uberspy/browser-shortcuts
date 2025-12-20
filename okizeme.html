@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Redirecting…</title>
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const raw = (params.get("q") || "").trim();
+
+      if (!raw) {
+        window.location.replace("https://okizeme.gg/database");
+        return;
+      }
+
+      const parts = raw.split(/\s+/);
+      const character = parts.shift();
+      const search = parts.join(" ");
+
+      const url =
+        "https://okizeme.gg/database/" +
+        encodeURIComponent(character) +
+        (search ? ("?search=" + encodeURIComponent(search)) : "");
+
+      window.location.replace(url);
+    })();
+  </script>
+</head>
+<body>
+  Redirecting…
+</body>
+</html>
