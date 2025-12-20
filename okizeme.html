@@ -9,19 +9,61 @@
       const params = new URLSearchParams(window.location.search);
       const raw = (params.get("q") || "").trim();
 
+      // If opened without query, go to the database landing page
       if (!raw) {
         window.location.replace("https://okizeme.gg/database");
         return;
       }
 
+      // Tokenize by whitespace
       const parts = raw.split(/\s+/);
-      const character = parts.shift();
-      const search = parts.join(" ");
 
-      const url =
-        "https://okizeme.gg/database/" +
-        encodeURIComponent(character) +
-        (search ? ("?search=" + encodeURIComponent(search)) : "");
+      // Expect at least: character + move
+      const character = (parts.shift() || "").trim();
+      if (!character) {
+        window.location.replace("https://okizeme.gg/database");
+        return;
+      }
+
+      // If there's nothing else, just go to the character page
+      if (parts.length === 0) {
+        window.location.replace(
+          "https://okizeme.gg/database/" + encodeURIComponent(character)
+        );
+        return;
+      }
+
+      // If the last token is "search", use query mode; otherwise use path mode
+      const last = parts[parts.length - 1].toLowerCase();
+      const isSearchMode = last === "search";
+
+      if (isSearchMode) parts.pop(); // remove trailing "search"
+
+      const move = parts.join(" ").trim(); // allow spaces if you ever need them
+      if (!move) {
+        // No move provided; fall back to character page
+        window.location.replace(
+          "https://okizeme.gg/database/" + encodeURIComponent(character)
+        );
+        return;
+      }
+
+      let url;
+      if (isSearchMode) {
+        // https://okizeme.gg/database/jin?search=df%2B2
+        url =
+          "https://okizeme.gg/database/" +
+          encodeURIComponent(character) +
+          "?search=" +
+          encodeURIComponent(move);
+      } else {
+        // https://okizeme.gg/database/jin/df%2B2
+        url =
+          "https://okizeme.gg/database/" +
+          encodeURIComponent(character) +
+          "/" +
+          encodeURIComponent(move);
+      }
 
       window.location.replace(url);
     })();
