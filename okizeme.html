@@ -35,7 +35,7 @@
 
       // If the last token is "search", use query mode; otherwise use path mode
       const last = parts[parts.length - 1].toLowerCase();
-      const isSearchMode = last === "search";
+      const isSearchMode = last === "direct";
 
       if (isSearchMode) parts.pop(); // remove trailing "search"
 
@@ -49,7 +49,7 @@
       }
 
       let url;
-      if (isSearchMode) {
+      if (!isSearchMode) {
         // https://okizeme.gg/database/jin?search=df%2B2
         url =
           "https://okizeme.gg/database/" +
